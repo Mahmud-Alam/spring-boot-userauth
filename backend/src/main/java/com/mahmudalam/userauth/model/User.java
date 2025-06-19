@@ -2,6 +2,7 @@ package com.mahmudalam.userauth.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
@@ -46,7 +47,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    @NotBlank(message = "Role is mandatory")
+    @NotNull(message = "Role is mandatory")
     private Role role;
 
     @Enumerated(EnumType.STRING)
