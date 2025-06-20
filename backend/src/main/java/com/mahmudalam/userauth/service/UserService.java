@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.mahmudalam.userauth.dto.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mahmudalam.userauth.model.User;
@@ -14,6 +15,9 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public UserResponse<List<User>> getAllUsers(){
         try {
@@ -36,6 +40,7 @@ public class UserService {
 
     public UserResponse<User> createUser(User createdUser){
         try{
+            createdUser.setPassword(passwordEncoder.encode(createdUser.getPassword()));
             User created = userRepository.save(createdUser);
             return new UserResponse<>(true, created, null);
         } catch (Exception e) {
@@ -49,7 +54,7 @@ public class UserService {
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername());
                         existingUser.setEmail(updatedUser.getEmail());
-                        existingUser.setPassword(updatedUser.getPassword());
+                        existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                         existingUser.setFirstName(updatedUser.getFirstName());
                         existingUser.setLastName(updatedUser.getLastName());
                         existingUser.setPhone(updatedUser.getPhone());
@@ -74,7 +79,7 @@ public class UserService {
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername() : existingUser.getUsername());
                         existingUser.setEmail(updatedUser.getEmail() != null ? updatedUser.getEmail() : existingUser.getEmail());
-                        existingUser.setPassword(updatedUser.getPassword() != null ? updatedUser.getPassword() : existingUser.getPassword());
+                        existingUser.setPassword(updatedUser.getPassword() != null ? passwordEncoder.encode(updatedUser.getPassword()) : existingUser.getPassword());
                         existingUser.setFirstName(updatedUser.getFirstName() != null ? updatedUser.getFirstName() : existingUser.getFirstName());
                         existingUser.setLastName(updatedUser.getLastName() != null ? updatedUser.getLastName() : existingUser.getLastName());
                         existingUser.setPhone(updatedUser.getPhone() != null ? updatedUser.getPhone() : existingUser.getPhone());
