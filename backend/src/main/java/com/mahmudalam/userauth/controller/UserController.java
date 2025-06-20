@@ -1,8 +1,8 @@
 package com.mahmudalam.userauth.controller;
 
 import java.util.List;
-import java.util.Optional;
 
+import com.mahmudalam.userauth.dto.UserResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,23 +19,36 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return users.isEmpty()
-                ? ResponseEntity.noContent().build()
-                : ResponseEntity.ok(users);
+    public ResponseEntity<UserResponse<List<User>>> getAllUsers() {
+        UserResponse<List<User>> response = userService.getAllUsers();
+        return response.isSuccess()
+                ? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id){
-        Optional<User> user = userService.getUserById(id);
-        return user.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<UserResponse<User>> getUserById(@PathVariable Long id){
+        UserResponse<User> response = userService.getUserById(id);
+        return response.isSuccess()
+                ? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user){
-        User createdUser = userService.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public ResponseEntity<UserResponse<User>> createUser(@RequestBody User createdUser){
+        UserResponse<User> response = userService.createUser(createdUser);
+        return response.isSuccess()
+                ? ResponseEntity.status(HttpStatus.CREATED).body(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse<User>> putUpdateUser(@PathVariable Long id, @RequestBody User updatedUser){
+        UserResponse<User> response = userService.putUpdateUser(id, updatedUser);
+        return response.isSuccess()
+                ? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+
 }
