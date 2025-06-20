@@ -1,5 +1,6 @@
 package com.mahmudalam.userauth.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -34,6 +35,7 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Password is mandatory")
+    @JsonIgnore
     private String password;
 
     private String firstName;
