@@ -76,6 +76,9 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+        if (this.status == null) {
+            this.status = Status.ACTIVE;
+        }
     }
 
     public enum Gender {
