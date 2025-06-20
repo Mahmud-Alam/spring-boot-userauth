@@ -67,4 +67,29 @@ public class UserService {
             return new UserResponse<>(false, null, "Failed to update user: " + e.getMessage());
         }
     }
+
+    public UserResponse<User> patchUpdateUser(Long id, User updatedUser) {
+        try{
+            return userRepository.findById(id)
+                    .map(existingUser -> {
+                        existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername() : existingUser.getUsername());
+                        existingUser.setEmail(updatedUser.getEmail() != null ? updatedUser.getEmail() : existingUser.getEmail());
+                        existingUser.setPassword(updatedUser.getPassword() != null ? updatedUser.getPassword() : existingUser.getPassword());
+                        existingUser.setFirstName(updatedUser.getFirstName() != null ? updatedUser.getFirstName() : existingUser.getFirstName());
+                        existingUser.setLastName(updatedUser.getLastName() != null ? updatedUser.getLastName() : existingUser.getLastName());
+                        existingUser.setPhone(updatedUser.getPhone() != null ? updatedUser.getPhone() : existingUser.getPhone());
+                        existingUser.setDob(updatedUser.getDob() != null ? updatedUser.getDob() : existingUser.getDob());
+                        existingUser.setGender(updatedUser.getGender() != null ? updatedUser.getGender() : existingUser.getGender());
+                        existingUser.setAddress(updatedUser.getAddress() != null ? updatedUser.getAddress() : existingUser.getAddress());
+                        existingUser.setRole(updatedUser.getRole() != null ? updatedUser.getRole() : existingUser.getRole());
+                        existingUser.setStatus(updatedUser.getStatus() != null ? updatedUser.getStatus() : existingUser.getStatus());
+
+                        userRepository.save(existingUser);
+                        return new UserResponse<>(true, existingUser, null);
+                    })
+                    .orElse(new UserResponse<>(false, null, "User not found to update"));
+        } catch (Exception e) {
+            return new UserResponse<>(false, null, "Failed to update user: " + e.getMessage());
+        }
+    }
 }

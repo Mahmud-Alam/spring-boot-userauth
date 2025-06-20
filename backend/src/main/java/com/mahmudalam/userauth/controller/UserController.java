@@ -50,5 +50,11 @@ public class UserController {
                 : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponse<User>> patchUpdateUser(@PathVariable Long id, @RequestBody User updatedUser){
+        UserResponse<User> response = userService.patchUpdateUser(id, updatedUser);
+        return response.isSuccess()
+                ? ResponseEntity.ok(response)
+                : ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 }
