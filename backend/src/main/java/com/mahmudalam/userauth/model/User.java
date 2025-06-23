@@ -1,6 +1,6 @@
 package com.mahmudalam.userauth.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -35,7 +35,8 @@ public class User {
 
     @Column(nullable = false)
     @NotBlank(message = "Password is mandatory")
-    @JsonIgnore
+//    @JsonIgnore       // for this, I am getting this error: "Failed to create userdetails: rawPassword cannot be null"
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String firstName;
@@ -70,6 +71,7 @@ public class User {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        this.role = Role.USER;
         if (this.status == null) {
             this.status = Status.ACTIVE;
         }
@@ -78,6 +80,9 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+        if (this.role == null) {
+            this.role = Role.USER;
+        }
         if (this.status == null) {
             this.status = Status.ACTIVE;
         }
@@ -91,7 +96,7 @@ public class User {
         USER, ADMIN
     }
 
-    public enum Status{
+    public enum Status {
         ACTIVE, INACTIVE, SUSPENDED
     }
 }
