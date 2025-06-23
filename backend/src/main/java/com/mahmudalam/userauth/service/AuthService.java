@@ -1,66 +1,74 @@
 package com.mahmudalam.userauth.service;
 
-import com.mahmudalam.userauth.dto.RegisterRequest;
-import com.mahmudalam.userauth.dto.UserResponse;
+import com.mahmudalam.userauth.dto.request.LoginRequest;
+import com.mahmudalam.userauth.dto.request.RegisterRequest;
+import com.mahmudalam.userauth.dto.response.AuthResponse;
 import com.mahmudalam.userauth.model.User;
 import com.mahmudalam.userauth.repository.UserRepository;
+import com.mahmudalam.userauth.security.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class AuthService {
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserResponse<User> register(RegisterRequest request) {
-        try {
-            if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-                return new UserResponse<>(false, null, "Username already exists");
-            }
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-            if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-                return new UserResponse<>(false, null, "Email already exists");
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public AuthResponse login(LoginRequest request) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(), request.getPassword()));
+
+            if (authentication.isAuthenticated()) {
+                String token = jwtService.generateToken(request.getUsername());
+                return new AuthResponse(true, token, null);
+            }
+        } catch (AuthenticationException e) {
+            return new AuthResponse(false, null, "Invalid credentials.");
+        }
+
+        return new AuthResponse(false, null, "Authentication failed.");
+    }
+
+    public AuthResponse register(RegisterRequest request) {
+        try {
+            if (userRepository.existsByUsername(request.getUsername())) {
+                return new AuthResponse(false, null, "Username already exists.");
+            }
+            if (userRepository.existsByEmail(request.getEmail())) {
+                return new AuthResponse(false, null, "Email already exists.");
             }
 
             User user = User.builder()
                     .username(request.getUsername())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .role(request.getRole() != null ? request.getRole() : User.Role.USER)
-                    .status(User.Status.ACTIVE)
                     .build();
 
-            User savedUser = userRepository.save(user);
-            return new UserResponse<>(true, savedUser, null);
+            userRepository.save(user);
+
+            String token = jwtService.generateToken(request.getUsername());
+
+            return new AuthResponse(true, token, null);
+
         } catch (Exception e) {
-            return new UserResponse<>(false, null, "Registration failed: " + e.getMessage());
+            return new AuthResponse(false, null, "User registration failed.");
         }
     }
-
-    public UserResponse<String> login(String email, String rawPassword) {
-        try {
-            Optional<User> optionalUser = userRepository.findByEmail(email);
-            if (optionalUser.isEmpty()) {
-                return new UserResponse<>(false, null, "Invalid email.");
-            }
-
-            User user = optionalUser.get();
-
-            if (!passwordEncoder.matches(rawPassword, user.getPassword())) {
-                return new UserResponse<>(false, null, "Password is incorrect.");
-            }
-
-            return new UserResponse<>(true, "Login successful", null);
-        } catch (Exception e) {
-            return new UserResponse<>(false, null, "Login failed: " + e.getMessage());
-        }
-    }
-
 }

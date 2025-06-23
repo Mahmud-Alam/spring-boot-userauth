@@ -1,14 +1,13 @@
 package com.mahmudalam.userauth.service;
 
-import java.util.List;
-
-import com.mahmudalam.userauth.dto.UserResponse;
+import com.mahmudalam.userauth.dto.response.UserResponse;
+import com.mahmudalam.userauth.model.User;
+import com.mahmudalam.userauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.mahmudalam.userauth.model.User;
-import com.mahmudalam.userauth.repository.UserRepository;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -19,7 +18,7 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserResponse<List<User>> getAllUsers(){
+    public UserResponse<List<User>> getAllUsers() {
         try {
             List<User> users = userRepository.findAll();
             return new UserResponse<>(true, users, null);
@@ -28,28 +27,28 @@ public class UserService {
         }
     }
 
-    public UserResponse<User> getUserById(Long id){
-        try{
+    public UserResponse<User> getUserById(Long id) {
+        try {
             return userRepository.findById(id)
                     .map(user -> new UserResponse<>(true, user, null))
                     .orElse(new UserResponse<>(false, null, "User not found with ID: " + id));
         } catch (Exception e) {
-            return new UserResponse<>(false, null, "Failed to retrieve user: " + e.getMessage());
+            return new UserResponse<>(false, null, "Failed to retrieve userdetails: " + e.getMessage());
         }
     }
 
-    public UserResponse<User> createUser(User createdUser){
-        try{
+    public UserResponse<User> createUser(User createdUser) {
+        try {
             createdUser.setPassword(passwordEncoder.encode(createdUser.getPassword()));
             User created = userRepository.save(createdUser);
             return new UserResponse<>(true, created, null);
         } catch (Exception e) {
-            return new UserResponse<>(false, null, "Failed to create user: " + e.getMessage());
+            return new UserResponse<>(false, null, "Failed to create userdetails: " + e.getMessage());
         }
     }
 
     public UserResponse<User> putUpdateUser(Long id, User updatedUser) {
-        try{
+        try {
             return userRepository.findById(id)
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername());
@@ -69,12 +68,12 @@ public class UserService {
                         return new UserResponse<>(true, existingUser, null);
                     }).orElse(new UserResponse<>(false, null, "User not found to update"));
         } catch (Exception e) {
-            return new UserResponse<>(false, null, "Failed to update user: " + e.getMessage());
+            return new UserResponse<>(false, null, "Failed to update userdetails: " + e.getMessage());
         }
     }
 
     public UserResponse<User> patchUpdateUser(Long id, User updatedUser) {
-        try{
+        try {
             return userRepository.findById(id)
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername() : existingUser.getUsername());
@@ -94,7 +93,77 @@ public class UserService {
                     })
                     .orElse(new UserResponse<>(false, null, "User not found to update"));
         } catch (Exception e) {
-            return new UserResponse<>(false, null, "Failed to update user: " + e.getMessage());
+            return new UserResponse<>(false, null, "Failed to update userdetails: " + e.getMessage());
         }
     }
+
+    public UserResponse<User> getUserByUsername(String username) {
+        try {
+            User user = userRepository.findByUsername(username);
+            if (user == null) {
+                return new UserResponse<>(false, null, "User not found");
+            }
+            return new UserResponse<>(true, user, null);
+        } catch (Exception e) {
+            return new UserResponse<>(false, null, "Failed to fetch userdetails: " + e.getMessage());
+        }
+    }
+
+    public UserResponse<User> putUpdateProfile(String username, User updatedUser) {
+        try {
+            User existingUser = userRepository.findByUsername(username);
+            if (existingUser == null) {
+                return new UserResponse<>(false, null, "User not found");
+            }
+
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            existingUser.setFirstName(updatedUser.getFirstName());
+            existingUser.setLastName(updatedUser.getLastName());
+            existingUser.setPhone(updatedUser.getPhone());
+            existingUser.setDob(updatedUser.getDob());
+            existingUser.setGender(updatedUser.getGender());
+            existingUser.setAddress(updatedUser.getAddress());
+
+            userRepository.save(existingUser);
+            return new UserResponse<>(true, existingUser, null);
+        } catch (Exception e) {
+            return new UserResponse<>(false, null, "Failed to update profile: " + e.getMessage());
+        }
+    }
+
+    public UserResponse<User> patchUpdateProfile(String username, User updatedUser) {
+        try {
+            User existingUser = userRepository.findByUsername(username);
+            if (existingUser == null) {
+                return new UserResponse<>(false, null, "User not found");
+            }
+
+            if (updatedUser.getUsername() != null)
+                existingUser.setUsername(updatedUser.getUsername());
+            if (updatedUser.getEmail() != null)
+                existingUser.setEmail(updatedUser.getEmail());
+            if (updatedUser.getPassword() != null)
+                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            if (updatedUser.getFirstName() != null)
+                existingUser.setFirstName(updatedUser.getFirstName());
+            if (updatedUser.getLastName() != null)
+                existingUser.setLastName(updatedUser.getLastName());
+            if (updatedUser.getPhone() != null)
+                existingUser.setPhone(updatedUser.getPhone());
+            if (updatedUser.getDob() != null)
+                existingUser.setDob(updatedUser.getDob());
+            if (updatedUser.getGender() != null)
+                existingUser.setGender(updatedUser.getGender());
+            if (updatedUser.getAddress() != null)
+                existingUser.setAddress(updatedUser.getAddress());
+
+            userRepository.save(existingUser);
+            return new UserResponse<>(true, existingUser, null);
+        } catch (Exception e) {
+            return new UserResponse<>(false, null, "Failed to update profile: " + e.getMessage());
+        }
+    }
+
 }
