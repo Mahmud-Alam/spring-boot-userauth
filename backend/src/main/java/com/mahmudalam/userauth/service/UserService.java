@@ -51,7 +51,7 @@ public class UserService {
         try {
             return userRepository.findById(id)
                     .map(existingUser -> {
-                        existingUser.setUsername(updatedUser.getUsername());
+                        existingUser.setUsername(updatedUser.getUsername().toLowerCase());
                         existingUser.setEmail(updatedUser.getEmail());
                         existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                         existingUser.setFirstName(updatedUser.getFirstName());
@@ -76,7 +76,7 @@ public class UserService {
         try {
             return userRepository.findById(id)
                     .map(existingUser -> {
-                        existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername() : existingUser.getUsername());
+                        existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername().toLowerCase() : existingUser.getUsername().toLowerCase());
                         existingUser.setEmail(updatedUser.getEmail() != null ? updatedUser.getEmail() : existingUser.getEmail());
                         existingUser.setPassword(updatedUser.getPassword() != null ? passwordEncoder.encode(updatedUser.getPassword()) : existingUser.getPassword());
                         existingUser.setFirstName(updatedUser.getFirstName() != null ? updatedUser.getFirstName() : existingUser.getFirstName());
@@ -99,7 +99,7 @@ public class UserService {
 
     public UserResponse<User> getUserByUsername(String username) {
         try {
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username.toLowerCase());
             if (user == null) {
                 return new UserResponse<>(false, null, "User not found");
             }
@@ -111,12 +111,12 @@ public class UserService {
 
     public UserResponse<User> putUpdateProfile(String username, User updatedUser) {
         try {
-            User existingUser = userRepository.findByUsername(username);
+            User existingUser = userRepository.findByUsername(username.toLowerCase());
             if (existingUser == null) {
                 return new UserResponse<>(false, null, "User not found");
             }
 
-            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setUsername(updatedUser.getUsername().toLowerCase());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             existingUser.setFirstName(updatedUser.getFirstName());
@@ -135,13 +135,13 @@ public class UserService {
 
     public UserResponse<User> patchUpdateProfile(String username, User updatedUser) {
         try {
-            User existingUser = userRepository.findByUsername(username);
+            User existingUser = userRepository.findByUsername(username.toLowerCase());
             if (existingUser == null) {
                 return new UserResponse<>(false, null, "User not found");
             }
 
             if (updatedUser.getUsername() != null)
-                existingUser.setUsername(updatedUser.getUsername());
+                existingUser.setUsername(updatedUser.getUsername().toLowerCase());
             if (updatedUser.getEmail() != null)
                 existingUser.setEmail(updatedUser.getEmail());
             if (updatedUser.getPassword() != null)
