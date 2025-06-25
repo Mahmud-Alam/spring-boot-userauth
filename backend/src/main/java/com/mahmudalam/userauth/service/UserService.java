@@ -39,6 +39,8 @@ public class UserService {
 
     public UserResponse<User> createUser(User createdUser) {
         try {
+            createdUser.setUsername(createdUser.getUsername().toLowerCase());
+            createdUser.setEmail(createdUser.getEmail().toLowerCase());
             createdUser.setPassword(passwordEncoder.encode(createdUser.getPassword()));
             User created = userRepository.save(createdUser);
             return new UserResponse<>(true, created, null);
@@ -52,7 +54,7 @@ public class UserService {
             return userRepository.findById(id)
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername().toLowerCase());
-                        existingUser.setEmail(updatedUser.getEmail());
+                        existingUser.setEmail(updatedUser.getEmail().toLowerCase());
                         existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
                         existingUser.setFirstName(updatedUser.getFirstName());
                         existingUser.setLastName(updatedUser.getLastName());
@@ -77,7 +79,7 @@ public class UserService {
             return userRepository.findById(id)
                     .map(existingUser -> {
                         existingUser.setUsername(updatedUser.getUsername() != null ? updatedUser.getUsername().toLowerCase() : existingUser.getUsername().toLowerCase());
-                        existingUser.setEmail(updatedUser.getEmail() != null ? updatedUser.getEmail() : existingUser.getEmail());
+                        existingUser.setEmail(updatedUser.getEmail() != null ? updatedUser.getEmail().toLowerCase() : existingUser.getEmail().toLowerCase());
                         existingUser.setPassword(updatedUser.getPassword() != null ? passwordEncoder.encode(updatedUser.getPassword()) : existingUser.getPassword());
                         existingUser.setFirstName(updatedUser.getFirstName() != null ? updatedUser.getFirstName() : existingUser.getFirstName());
                         existingUser.setLastName(updatedUser.getLastName() != null ? updatedUser.getLastName() : existingUser.getLastName());
@@ -117,7 +119,7 @@ public class UserService {
             }
 
             existingUser.setUsername(updatedUser.getUsername().toLowerCase());
-            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setEmail(updatedUser.getEmail().toLowerCase());
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             existingUser.setFirstName(updatedUser.getFirstName());
             existingUser.setLastName(updatedUser.getLastName());
@@ -143,7 +145,7 @@ public class UserService {
             if (updatedUser.getUsername() != null)
                 existingUser.setUsername(updatedUser.getUsername().toLowerCase());
             if (updatedUser.getEmail() != null)
-                existingUser.setEmail(updatedUser.getEmail());
+                existingUser.setEmail(updatedUser.getEmail().toLowerCase());
             if (updatedUser.getPassword() != null)
                 existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
             if (updatedUser.getFirstName() != null)
@@ -165,5 +167,4 @@ public class UserService {
             return new UserResponse<>(false, null, "Failed to update profile: " + e.getMessage());
         }
     }
-
 }
