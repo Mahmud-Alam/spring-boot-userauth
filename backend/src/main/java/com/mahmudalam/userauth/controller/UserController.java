@@ -30,7 +30,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse<User>> getUserById(@PathVariable Long id) {
+    public ResponseEntity<UserResponse<User>> getUserById(@PathVariable Long id){
         UserResponse<User> response = userService.getUserById(id);
         return response.isSuccess()
                 ? ResponseEntity.ok(response)
@@ -39,7 +39,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<UserResponse<User>> createUser(@RequestBody User createdUser) {
+    public ResponseEntity<UserResponse<User>> createUser(@RequestBody User createdUser){
         UserResponse<User> response = userService.createUser(createdUser);
         return response.isSuccess()
                 ? ResponseEntity.status(HttpStatus.CREATED).body(response)
@@ -48,7 +48,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponse<User>> putUpdateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<UserResponse<User>> putUpdateUser(@PathVariable Long id, @RequestBody User updatedUser){
         UserResponse<User> response = userService.putUpdateUser(id, updatedUser);
         return response.isSuccess()
                 ? ResponseEntity.ok(response)
@@ -57,7 +57,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse<User>> patchUpdateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public ResponseEntity<UserResponse<User>> patchUpdateUser(@PathVariable Long id, @RequestBody User updatedUser){
         UserResponse<User> response = userService.patchUpdateUser(id, updatedUser);
         return response.isSuccess()
                 ? ResponseEntity.ok(response)
@@ -76,7 +76,7 @@ public class UserController {
 
     @PutMapping("/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<UserResponse<User>> putUpdateProfile(@RequestBody User updatedUser) {
+    public ResponseEntity<UserResponse<User>> putUpdateProfile(@RequestBody User updatedUser){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserResponse<User> response = userService.putUpdateProfile(username, updatedUser);
         return response.isSuccess()
@@ -86,7 +86,7 @@ public class UserController {
 
     @PatchMapping("/profile")
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
-    public ResponseEntity<UserResponse<User>> patchUpdateProfile(@RequestBody User updatedUser) {
+    public ResponseEntity<UserResponse<User>> patchUpdateProfile(@RequestBody User updatedUser){
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         UserResponse<User> response = userService.patchUpdateProfile(username, updatedUser);
         return response.isSuccess()
