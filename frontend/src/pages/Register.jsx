@@ -50,7 +50,7 @@ const Register = () => {
             </label>
             <input
               type="text"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
@@ -62,7 +62,7 @@ const Register = () => {
             </label>
             <input
               type="email"
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -75,7 +75,7 @@ const Register = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className="w-full p-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="w-full p-2 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -92,7 +92,7 @@ const Register = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+            className="w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-600 transition"
             disabled={loading}
           >
             {loading ? "Registering..." : "Register"}
@@ -101,7 +101,7 @@ const Register = () => {
 
         <p className="mt-4 text-sm text-center text-gray-600">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:underline">
+          <Link to="/login" className="text-indigo-500 hover:underline">
             Login
           </Link>
         </p>

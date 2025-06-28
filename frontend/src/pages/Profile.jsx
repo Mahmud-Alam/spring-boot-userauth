@@ -81,7 +81,7 @@ const Profile = () => {
                   </h2>
                   <span
                     className={`text-xs px-3 py-1 rounded-full ${
-                      profile.role === "ADMIN" ? "bg-red-500" : "bg-green-500"
+                      profile.role === "ADMIN" ? "bg-indigo-500" : "bg-green-500"
                     } text-white`}
                   >
                     {profile.role}

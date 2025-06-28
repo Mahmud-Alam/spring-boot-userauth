@@ -56,7 +56,7 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card
           // color="bg-blue-50"
-          icon={<Users className="w-8 h-8 text-blue-500" />}
+          icon={<Users className="w-8 h-8 text-indigo-600" />}
           label="Total Users"
           value={total}
         />
@@ -114,7 +114,7 @@ const Dashboard = () => {
                       <span
                         className={`text-xs font-semibold px-3 py-1 rounded-full ${
                           u.role === "ADMIN"
-                            ? "bg-red-100 text-red-600"
+                            ? "bg-indigo-100 text-indigo-600"
                             : "bg-green-100 text-green-600"
                         }`}
                       >
