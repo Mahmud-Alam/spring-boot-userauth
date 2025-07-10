@@ -4,13 +4,12 @@ import com.mahmudalam.userauth.dto.response.UserResponse;
 import com.mahmudalam.userauth.model.User;
 import com.mahmudalam.userauth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,8 +20,11 @@ public class UserController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<UserResponse<List<User>>> getAllUsers() {
-        UserResponse<List<User>> response = userService.getAllUsers();
+    public ResponseEntity<UserResponse<Page<User>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        UserResponse<Page<User>> response = userService.getAllUsers(page, size);
         return response.isSuccess()
                 ? ResponseEntity.ok(response)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);

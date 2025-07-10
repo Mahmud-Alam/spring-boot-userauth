@@ -4,6 +4,9 @@ import com.mahmudalam.userauth.dto.response.UserResponse;
 import com.mahmudalam.userauth.model.User;
 import com.mahmudalam.userauth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +21,10 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserResponse<List<User>> getAllUsers() {
+    public UserResponse<Page<User>> getAllUsers(int page, int size) {
         try {
-            List<User> users = userRepository.findAll();
+            Pageable pageable = PageRequest.of(page, size);
+            Page<User> users = userRepository.findAll(pageable);
             return new UserResponse<>(true, users, null);
         } catch (Exception e) {
             return new UserResponse<>(false, null, "Failed to fetch users: " + e.getMessage());
