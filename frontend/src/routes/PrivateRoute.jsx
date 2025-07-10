@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAppContext } from "../contexts/AppContext";
+import Unauthorized from "../pages/Unauthorized";
 
 const PrivateRoute = ({ children, role }) => {
   const { accessToken, jwtPayload } = useAppContext();
@@ -9,9 +10,7 @@ const PrivateRoute = ({ children, role }) => {
   }
 
   if (role && jwtPayload?.role !== role) {
-    return (
-      <div className="text-center p-5 text-red-600">You are not authorized</div>
-    );
+    return <Unauthorized />;
   }
 
   return children;
