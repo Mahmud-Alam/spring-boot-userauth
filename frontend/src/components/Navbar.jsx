@@ -37,11 +37,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         {/* Left: Logo */}
         <div className="flex items-center space-x-3">
-          <img
-            src="/logo.png"
-            alt="Logo"
-            className="w-8"
-          />
+          <img src="/logo.png" alt="Logo" className="w-8" />
           <span className="text-lg font-semibold tracking-wide">User Auth</span>
         </div>
 
