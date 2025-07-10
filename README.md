@@ -193,8 +193,8 @@ jwt.refresh.expiry=1209600000
 mvn spring-boot:run
 ```
 
-App runs on: **[http://localhost:8082](http://localhost:8082)**
-Swagger UI: **[http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)**
+- App runs on: **[http://localhost:8082](http://localhost:8082)**
+- Swagger UI: **[http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html)**
 
 ---
 
@@ -283,10 +283,10 @@ mvn test
 ## 🏆 Author
 
 **Mahmud Alam**
-🌍 Portfolio: [Mahmud Alam](https://mahmudalam.com/)
-📧 Email: [mahmudalam.official@gmail.com](mailto:mahmudalam.official@gmail.com)
-💻 GitHub: [Mahmud-Alam](https://github.com/Mahmud-Alam)
-💼 LinkedIn: [@mahmudalamofficial](https://linkedin.com/in/mahmudalamofficial)
+- 🌍 Portfolio: [Mahmud Alam](https://mahmudalam.com/)
+- 📧 Email: [mahmudalam.official@gmail.com](mailto:mahmudalam.official@gmail.com)
+- 💻 GitHub: [Mahmud-Alam](https://github.com/Mahmud-Alam)
+- 💼 LinkedIn: [@mahmudalamofficial](https://linkedin.com/in/mahmudalamofficial)
 
 ---
 
