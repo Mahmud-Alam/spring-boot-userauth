@@ -3,10 +3,12 @@ import Login from "./pages/Login";
 import { ToastContainer } from "react-toastify";
 import Register from "./pages/Register";
 import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import { useAppContext } from "./contexts/AppContext";
 import Layout from "./components/Layout";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const { accessToken } = useAppContext();
@@ -23,8 +25,22 @@ const App = () => {
             )
           }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
@@ -45,6 +61,8 @@ const App = () => {
             </PrivateRoute>
           }
         />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <ToastContainer />
