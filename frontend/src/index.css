@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@keyframes bounceAndPulse {
+  0%, 100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-25%);
+    opacity: 0.5;
+  }
+}
+
+.animate-bounce-pulse {
+  animation: bounceAndPulse 1.5s infinite;
+}
+
