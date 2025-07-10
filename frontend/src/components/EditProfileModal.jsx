@@ -12,19 +12,42 @@ import {
   UserCircle2,
 } from "lucide-react";
 
+// Move InputField component OUTSIDE of EditProfileModal
+const InputField = ({ icon, ...props }) => (
+  <div className="flex items-center border rounded-lg px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-blue-100">
+    <div className="text-gray-400 mr-2">{icon}</div>
+    <input
+      {...props}
+      className="flex-1 outline-none text-gray-800 placeholder-gray-400"
+    />
+  </div>
+);
+
 const EditProfileModal = ({ profile, onClose, onSave }) => {
   const { accessToken } = useAppContext();
-  const [form, setForm] = useState({ ...profile });
-  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // State for each field separately
+  const [firstName, setFirstName] = useState(profile.firstName || "");
+  const [lastName, setLastName] = useState(profile.lastName || "");
+  const [phone, setPhone] = useState(profile.phone || "");
+  const [dob, setDob] = useState(profile.dob || "");
+  const [address, setAddress] = useState(profile.address || "");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    const updatedProfile = {
+      ...profile,
+      firstName,
+      lastName,
+      phone,
+      dob,
+      address,
+    };
+
     try {
-      await updateProfile(form);
+      await updateProfile(updatedProfile);
       toast.success("Profile updated!");
       onClose();
       onSave();
@@ -35,23 +58,13 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
     }
   };
 
-  const InputField = ({ icon, ...props }) => (
-    <div className="flex items-center border rounded-lg px-3 py-2 bg-white shadow-sm focus-within:ring-2 focus-within:ring-blue-100">
-      <div className="text-gray-400 mr-2">{icon}</div>
-      <input
-        {...props}
-        className="flex-1 outline-none text-gray-800 placeholder-gray-400"
-      />
-    </div>
-  );
-
   return (
     <div className="fixed inset-0 backdrop-blur-sm bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl w-full max-w-md p-6 space-y-5 border border-gray-200 shadow-xl relative">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 p-1 border text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full transition duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+          className="absolute top-3 right-3 p-1 border text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-full transition"
         >
           <X className="w-5 h-5" />
         </button>
@@ -65,38 +78,38 @@ const EditProfileModal = ({ profile, onClose, onSave }) => {
         <form onSubmit={handleSubmit} className="space-y-3">
           <InputField
             icon={<User className="w-5 h-5" />}
-            name="firstName"
-            value={form.firstName || ""}
-            onChange={handleChange}
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
             placeholder="First Name"
+            name="firstName"
           />
           <InputField
             icon={<User className="w-5 h-5" />}
-            name="lastName"
-            value={form.lastName || ""}
-            onChange={handleChange}
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
             placeholder="Last Name"
+            name="lastName"
           />
           <InputField
             icon={<Phone className="w-5 h-5" />}
-            name="phone"
-            value={form.phone || ""}
-            onChange={handleChange}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
             placeholder="Phone Number"
+            name="phone"
           />
           <InputField
             icon={<Calendar className="w-5 h-5" />}
-            name="dob"
+            value={dob}
+            onChange={(e) => setDob(e.target.value)}
             type="date"
-            value={form.dob || ""}
-            onChange={handleChange}
+            name="dob"
           />
           <InputField
             icon={<MapPin className="w-5 h-5" />}
-            name="address"
-            value={form.address || ""}
-            onChange={handleChange}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
             placeholder="Address"
+            name="address"
           />
 
           {/* Buttons */}
